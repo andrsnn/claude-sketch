@@ -1,5 +1,7 @@
 # sketch
 
+![sketch - prompt to design](mocks/mock-final.png)
+
 A Claude Code plugin that generates UI mockups and visual designs using Google Gemini. Describe what you want, Claude generates 3 options, and you pick, tweak, or regenerate until you're happy.
 
 Claude analyzes your codebase for context (color schemes, UI framework, existing design patterns) so the generated mockups actually match your project.
