@@ -108,10 +108,36 @@ If any generation fails, report the error and retry that specific option once.
 
 ### Step 4: Present the Options
 
-Use the Read tool to view each generated image (Claude Code is multimodal and can view PNG/JPG files). For each option:
+First, copy the generated images to the user's working directory so they're easy to find:
+
+```bash
+cp ./mocks/mock-option-*.png "$ORIGINAL_CWD/mocks/" 2>/dev/null || true
+```
+
+Then open all 3 images for the user to see. Detect the platform and use the right opener:
+
+```bash
+if command -v xdg-open &>/dev/null; then
+  OPENER="xdg-open"
+elif command -v open &>/dev/null; then
+  OPENER="open"
+elif command -v start &>/dev/null; then
+  OPENER="start"
+else
+  OPENER=""
+fi
+
+if [ -n "$OPENER" ]; then
+  $OPENER "./mocks/mock-option-1.png" 2>/dev/null &
+  $OPENER "./mocks/mock-option-2.png" 2>/dev/null &
+  $OPENER "./mocks/mock-option-3.png" 2>/dev/null &
+fi
+```
+
+Also read each image with the Read tool so you (Claude) can see them and describe them. For each option:
 
 1. Read the image file using the Read tool
-2. Describe what you see in the generated image — the layout, colors, key elements, overall feel
+2. Describe what you see in the generated image - the layout, colors, key elements, overall feel
 3. Note how it differs from the other options
 
 Present all 3 with brief descriptions, then ask the user what they'd like to do.
