@@ -1,8 +1,8 @@
 # sketch
 
-A Claude Code plugin that gives Claude the ability to generate images. Describe what you want — a UI mockup, concept art, an icon, a diagram — and Claude will generate 3 options using Google Gemini's image generation, show them to you, and iterate until you're happy.
+A Claude Code plugin that generates UI mockups and visual designs using Google Gemini. Describe what you want, Claude generates 3 options, and you pick, tweak, or regenerate until you're happy.
 
-Claude analyzes your codebase for context (color schemes, UI framework, existing design patterns) so the generated images actually match your project.
+Claude analyzes your codebase for context (color schemes, UI framework, existing design patterns) so the generated mockups actually match your project.
 
 ## What it does
 
@@ -10,7 +10,7 @@ Claude analyzes your codebase for context (color schemes, UI framework, existing
 2. Claude reads your project for design context (Tailwind config, existing assets, etc.)
 3. Generates 3 variations in parallel using Google Gemini
 4. Shows you all 3 and asks what you think
-5. You pick one, ask for tweaks, or regenerate — loops until you're done
+5. You pick one, ask for tweaks, or regenerate - loops until you're done
 
 Works for UI mockups, app screens, icons, illustrations, marketing graphics, concept art, wireframes, and anything else you can describe.
 
@@ -29,10 +29,10 @@ export GOOGLE_AI_API_KEY="your-key"
 **From GitHub:**
 
 ```
-/plugin install sketch@your-username/claude-sketch
+/plugin install sketch@andrsnn/claude-sketch
 ```
 
-This permanently adds the plugin — no flags needed on future sessions.
+This permanently adds the plugin - no flags needed on future sessions.
 
 **Or from a local directory (for development):**
 
@@ -54,7 +54,7 @@ Script dependencies (`@google/genai`) install automatically on first use.
 
 ### Natural language
 
-Just ask in conversation — the skill auto-triggers:
+Just ask in conversation - the skill auto-triggers:
 
 - "Sketch me a landing page with a hero section and pricing table"
 - "Generate a mockup of the settings page"
@@ -66,20 +66,20 @@ Just ask in conversation — the skill auto-triggers:
 Point to an existing image to maintain visual consistency:
 
 - "Sketch a settings page using `./mocks/dashboard.png` as style reference"
-- After picking an option: "Tweak this one — make the header blue"
+- After picking an option: "Tweak this one - make the header blue"
 
 ## How the loop works
 
 After generating 3 options, you can:
 
-- **Pick** — Save your favorite to a final location
-- **Tweak** — Keep an option as reference, describe what to change, get 3 new variants
-- **Regenerate** — Fresh batch with adjusted prompts based on your feedback
-- **Start over** — Describe something completely different
+- **Pick** - Save your favorite to a final location
+- **Tweak** - Keep an option as reference, describe what to change, get 3 new variants
+- **Regenerate** - Fresh batch with adjusted prompts based on your feedback
+- **Start over** - Describe something completely different
 
 ## Standalone script
 
-The image generation script works independently of Claude Code:
+The generation script works independently of Claude Code:
 
 ```bash
 node scripts/generate-image.mjs \
