@@ -26,10 +26,11 @@ export GOOGLE_AI_API_KEY="your-key"
 
 ### 2. Install the plugin
 
-**From GitHub:**
+**From GitHub (two steps):**
 
 ```
-/plugin install sketch@andrsnn/claude-sketch
+/plugin marketplace add andrsnn/claude-sketch
+/plugin install sketch@andrsnn-claude-sketch
 ```
 
 This permanently adds the plugin - no flags needed on future sessions.

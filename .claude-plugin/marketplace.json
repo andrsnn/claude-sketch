@@ -1,0 +1,13 @@
+{
+  "name": "andrsnn-claude-sketch",
+  "owner": {
+    "name": "andrsnn"
+  },
+  "plugins": [
+    {
+      "name": "sketch",
+      "source": "./",
+      "description": "Generate UI mockups and visual designs with Google Gemini"
+    }
+  ]
+}
