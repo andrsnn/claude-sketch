@@ -72,29 +72,31 @@ Vary the 3 options by changing:
 - **Option 2**: A creative or alternative layout/composition
 - **Option 3**: A different visual style or emphasis
 
+IMPORTANT: Always use ABSOLUTE paths for the `--output` flag, writing to the user's working directory (not the plugin cache). Use `$PWD/mocks/` as the output directory.
+
 Run all 3 generations in parallel using a single Bash call:
 
 ```bash
-PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT}"
-cd "$PLUGIN_ROOT/scripts"
+SCRIPT="${CLAUDE_PLUGIN_ROOT}/scripts/generate-image.mjs"
+mkdir -p "$PWD/mocks"
 
-node generate-image.mjs \
+node "$SCRIPT" \
   --prompt "PROMPT_1" \
-  --output "./mocks/mock-option-1.png" \
+  --output "$PWD/mocks/mock-option-1.png" \
   --aspect-ratio "RATIO" \
   REFERENCE_FLAGS &
 PID1=$!
 
-node generate-image.mjs \
+node "$SCRIPT" \
   --prompt "PROMPT_2" \
-  --output "./mocks/mock-option-2.png" \
+  --output "$PWD/mocks/mock-option-2.png" \
   --aspect-ratio "RATIO" \
   REFERENCE_FLAGS &
 PID2=$!
 
-node generate-image.mjs \
+node "$SCRIPT" \
   --prompt "PROMPT_3" \
-  --output "./mocks/mock-option-3.png" \
+  --output "$PWD/mocks/mock-option-3.png" \
   --aspect-ratio "RATIO" \
   REFERENCE_FLAGS &
 PID3=$!
@@ -108,13 +110,7 @@ If any generation fails, report the error and retry that specific option once.
 
 ### Step 4: Present the Options
 
-First, copy the generated images to the user's working directory so they're easy to find:
-
-```bash
-cp ./mocks/mock-option-*.png "$ORIGINAL_CWD/mocks/" 2>/dev/null || true
-```
-
-Then open all 3 images for the user to see. Detect the platform and use the right opener:
+IMPORTANT: You MUST open the images for the user to see. Do this IMMEDIATELY after generation completes, BEFORE describing the options. Run this as a separate Bash call:
 
 ```bash
 if command -v xdg-open &>/dev/null; then
@@ -128,9 +124,9 @@ else
 fi
 
 if [ -n "$OPENER" ]; then
-  $OPENER "./mocks/mock-option-1.png" 2>/dev/null &
-  $OPENER "./mocks/mock-option-2.png" 2>/dev/null &
-  $OPENER "./mocks/mock-option-3.png" 2>/dev/null &
+  $OPENER "$PWD/mocks/mock-option-1.png" 2>/dev/null &
+  $OPENER "$PWD/mocks/mock-option-2.png" 2>/dev/null &
+  $OPENER "$PWD/mocks/mock-option-3.png" 2>/dev/null &
 fi
 ```
 

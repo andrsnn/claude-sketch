@@ -34,16 +34,17 @@ Follow the full workflow defined in the `sketch` skill:
 
 1. **Analyze the request** — Determine subject, style, aspect ratio, and any reference images from the arguments
 2. **Scan the codebase** — Look for design context (colors, UI framework, existing assets) to make mockups contextually relevant
-3. **Generate 3 options** — Construct 3 prompt variations and run them in parallel:
+3. **Generate 3 options** — Use ABSOLUTE paths for output (write to `$PWD/mocks/`, never relative paths inside the plugin cache):
    ```bash
-   PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT}"
-   cd "$PLUGIN_ROOT/scripts"
-   node generate-image.mjs --prompt "PROMPT" --output "./mocks/mock-option-1.png" --aspect-ratio "RATIO" &
-   node generate-image.mjs --prompt "PROMPT" --output "./mocks/mock-option-2.png" --aspect-ratio "RATIO" &
-   node generate-image.mjs --prompt "PROMPT" --output "./mocks/mock-option-3.png" --aspect-ratio "RATIO" &
+   SCRIPT="${CLAUDE_PLUGIN_ROOT}/scripts/generate-image.mjs"
+   mkdir -p "$PWD/mocks"
+   node "$SCRIPT" --prompt "PROMPT" --output "$PWD/mocks/mock-option-1.png" --aspect-ratio "RATIO" &
+   node "$SCRIPT" --prompt "PROMPT" --output "$PWD/mocks/mock-option-2.png" --aspect-ratio "RATIO" &
+   node "$SCRIPT" --prompt "PROMPT" --output "$PWD/mocks/mock-option-3.png" --aspect-ratio "RATIO" &
    wait
    ```
-4. **Present options** — Read each image with the Read tool, describe what you see, and ask the user to choose
+4. **Open images for user** — IMMEDIATELY open all 3 with `xdg-open` (Linux), `open` (macOS), or `start` (Windows) so the user can see them
+5. **Present options** — Also Read each image yourself, describe what you see, and ask the user to choose
 5. **Iterate** — Handle pick/tweak/regenerate/start-over responses in a loop until the user is satisfied
 
 Refer to `${CLAUDE_PLUGIN_ROOT}/skills/sketch/references/prompt-guide.md` for prompt engineering best practices.
