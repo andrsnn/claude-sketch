@@ -2,19 +2,18 @@
 
 ![sketch - prompt to design](mocks/mock-final.png)
 
-A Claude Code plugin that generates UI mockups and visual designs using Google Gemini. Describe what you want, Claude generates 3 options, and you pick, tweak, or regenerate until you're happy.
+A Claude Code plugin that generates visual content using Google Gemini. Ads, app store assets, social media posts, UI mockups, pitch deck slides, product shots, email headers, infographics, brand assets, packaging mockups, sales collateral — describe what you need, Claude generates it with expert-level creative guidance, and you iterate until it's right.
 
-Claude analyzes your codebase for context (color schemes, UI framework, existing design patterns) so the generated mockups actually match your project.
+Claude identifies the content type, auto-selects the right dimensions and style rules, analyzes your codebase for brand context, and applies industry best practices — so you get professional results without being a designer.
 
 ## What it does
 
-1. You describe what you want (or use `/sketch a login page with dark theme`)
-2. Claude reads your project for design context (Tailwind config, existing assets, etc.)
-3. Generates 3 variations in parallel using Google Gemini
-4. Shows you all 3 and asks what you think
-5. You pick one, ask for tweaks, or regenerate - loops until you're done
-
-Works for UI mockups, app screens, icons, illustrations, marketing graphics, concept art, wireframes, and anything else you can describe.
+1. You describe what you want ("sketch me an Instagram ad for our new product launch")
+2. Claude detects the content type and applies expert creative guidance (dimensions, style, best practices)
+3. Scans your project for design context (colors, UI framework, brand assets)
+4. Generates 1 expert-crafted image using Google Gemini
+5. Opens it, describes it, and asks what you think
+6. You tweak, regenerate, or start over — loops until you're done
 
 ## Install
 
@@ -47,38 +46,67 @@ Script dependencies (`@google/genai`) install automatically on first use.
 
 ## Usage
 
-### Slash command
+### Natural language (auto-triggers)
 
-```
-/sketch a SaaS dashboard with analytics charts and a dark sidebar
-/sketch a mobile onboarding flow for a fitness app
-/sketch an icon set for a weather app, 1:1 aspect ratio
-```
+Just ask in conversation — the skill detects the content type and applies the right guidance:
 
-### Natural language
+**Ads & Marketing:**
+- "Create an ad for our new coffee blend"
+- "Design a promotional banner for our summer sale"
+- "Make a retargeting ad for abandoned cart users"
 
-Just ask in conversation - the skill auto-triggers:
+**Social Media:**
+- "Make an Instagram post announcing our product launch"
+- "Design a YouTube thumbnail for my tutorial video"
+- "Create a Pinterest pin for this recipe"
+- "Design a LinkedIn post graphic about our Series A"
 
+**App Store:**
+- "Generate app store screenshots for my fitness app"
+- "Design an app icon for a weather app"
+- "Create a Google Play feature graphic"
+
+**UI/UX:**
 - "Sketch me a landing page with a hero section and pricing table"
-- "Generate a mockup of the settings page"
 - "Mock up a mobile version of this dashboard"
-- "Create concept art for the app's empty state illustrations"
+- "Generate a wireframe for the settings page"
+
+**Presentations:**
+- "Design a pitch deck slide showing our growth metrics"
+- "Create a presentation cover slide for our Q4 review"
+
+**Product & E-commerce:**
+- "Create a product hero shot for our new headphones"
+- "Design a category banner for the shoe collection"
+
+**Email:**
+- "Design an email header for our newsletter"
+- "Create a hero image for our product launch email"
+
+**Content Marketing:**
+- "Create a blog header image for an article about AI trends"
+- "Design an infographic about our company's impact"
+
+**Brand & Sales:**
+- "Design a logo concept for a sustainable fashion brand"
+- "Create a one-pager for our enterprise sales team"
+- "Design a case study graphic highlighting customer results"
 
 ### With reference images
 
 Point to an existing image to maintain visual consistency:
 
-- "Sketch a settings page using `./mocks/dashboard.png` as style reference"
-- After picking an option: "Tweak this one - make the header blue"
+- "Create a social post using `./sketches/brand-style.png` as style reference"
+- After generating: "Tweak this — make the background darker"
 
-## How the loop works
+## How iteration works
 
-After generating 3 options, you can:
+After generating an image, you can:
 
-- **Pick** - Save your favorite to a final location
-- **Tweak** - Keep an option as reference, describe what to change, get 3 new variants
-- **Regenerate** - Fresh batch with adjusted prompts based on your feedback
-- **Start over** - Describe something completely different
+- **Tweak** — Keep the image as reference, describe changes, get an updated version
+- **Regenerate** — Fresh generation with adjusted prompt based on your feedback
+- **Start over** — Describe something completely different
+- **Done** — You're satisfied, move on
 
 ## Standalone script
 
@@ -99,7 +127,6 @@ Outputs JSON: `{ "success": true, "output": "./rocket.png", "description": "..."
 ```
 claude-sketch/
 ├── .claude-plugin/plugin.json         # Plugin metadata
-├── commands/sketch.md                 # /sketch slash command
 ├── skills/sketch/
 │   ├── SKILL.md                       # Auto-trigger skill (core workflow)
 │   └── references/prompt-guide.md     # Prompt engineering reference

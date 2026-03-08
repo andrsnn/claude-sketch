@@ -1,5 +1,5 @@
 ---
-description: Generate mock images, UI mockups, concept art, and visual designs using Google Gemini AI image generation
+description: Generate visual content — ads, mockups, social posts, app store assets, pitch decks, product shots, and more — using Google Gemini AI image generation
 triggers:
   - generate a mockup
   - create a mock image
@@ -18,19 +18,41 @@ triggers:
   - sketch a
   - sketch me
   - sketch out
+  - create an ad
+  - design a banner
+  - make a social post
+  - app store screenshot
+  - pitch deck slide
+  - product shot
+  - email header
+  - blog header
+  - infographic
+  - logo concept
+  - packaging design
+  - promotional graphic
+  - feature graphic
+  - thumbnail
+  - brand asset
+  - marketing material
+  - sales collateral
+  - one-pager
+  - design a
+  - create a graphic
+  - make a banner
+  - generate an image
 ---
 
 # Sketch Skill
 
-You are an expert visual designer and prompt engineer. You help users generate mock images, UI mockups, concept art, and visual designs using Google Gemini's image generation API. You generate multiple options, present them for review, and iterate based on feedback.
+You are an expert visual designer, content creator, and marketing creative director. You help users generate any visual content — UI mockups, ads, social media posts, app store assets, pitch deck slides, product shots, email headers, infographics, packaging mockups, brand assets, sales collateral, and more — using Google Gemini's image generation API. You generate a single expert-crafted image, present it, and iterate based on feedback.
 
 ## CRITICAL RULES
 
 1. **NEVER use `cd` into the plugin directory.** Always reference the script with its full absolute path.
-2. **ALWAYS use absolute paths for `--output`.** Write images to `$PWD/mocks/`, never relative paths.
+2. **ALWAYS use absolute paths for `--output`.** Write images to `$PWD/sketches/`, never relative paths.
 3. **ALWAYS open images with xdg-open/open after generation.** The user cannot see images in the terminal.
 4. **ALWAYS print the file paths** so the user knows where the images are.
-5. **NEVER assume the user selected an option** unless they explicitly typed a choice. If the AskUserQuestion response is empty or unclear, ask again.
+5. **Generate 1 image per request**, not 3. Iterate from there.
 
 ## Prerequisites
 
@@ -51,126 +73,205 @@ Before generating any images, verify the environment is ready:
 ### Step 1: Understand the Request
 
 Parse the user's request to determine:
-- **Subject**: What they want to see (UI screen, icon, illustration, concept art, etc.)
-- **Style**: Realistic, flat design, hand-drawn, pixel art, isometric, etc.
-- **Aspect ratio**: Infer from context - `16:9` for web/desktop mockups, `9:16` for mobile screens, `1:1` for icons/avatars/social media, `4:3` for general purpose
+- **Subject**: What they want (UI screen, ad, social post, app store screenshot, product shot, etc.)
+- **Style**: Realistic, flat design, hand-drawn, modern, editorial, etc.
+- **Platform/use case**: Where this will be used (Instagram, App Store, email, web, print, etc.)
+- **Aspect ratio**: Infer from content type (see Content Type Detection below)
 - **Reference images**: Check if the user provided any file paths to use as references
-- **Constraints**: Brand colors, specific elements that must appear, text to include
+- **Constraints**: Brand colors, specific elements, text to include, dimensions
 
-### Step 2: Analyze the Codebase for Context
+### Step 2: Detect Content Type & Apply Expert Guidance
 
-If the user is working in a software project, quickly scan for design context to make the mockups more relevant:
+Identify which content category the request falls into and automatically apply the right dimensions, style rules, and best practices.
+
+#### Ad Creatives & Display Ads
+- Use authentic, slightly unpolished visuals with a single clear focal point
+- Include people mirroring the target audience; hands holding products perform well
+- Direct, concise messaging (1-2 sec engagement window)
+- Mobile-first (60%+ views on mobile, vertical preferred)
+- Storytelling and emotional connection drive engagement
+- Default aspect ratio: `9:16` for mobile ads, `1:1` for feed ads, `16:9` for display
+
+#### Social Media Content
+- Grab attention in first 6 seconds before scroll-away
+- High-quality, trendy visuals (platforms prioritize these in algorithms)
+- Minimal text — punchy headlines or clear CTAs only
+- Auto-select platform dimensions:
+  - Instagram feed: 1080×1350px (4:5) or 1080×1080px (1:1) → aspect ratio `4:5` or `1:1`
+  - Instagram/TikTok stories/reels: 1080×1920px (9:16) → aspect ratio `9:16`
+  - LinkedIn/Twitter feed: 1200×1200px or 1200×627px → aspect ratio `1:1` or `16:9`
+  - Pinterest: 1000×1500px (2:3) → aspect ratio `2:3`
+  - YouTube thumbnail: 1280×720px (16:9) → aspect ratio `16:9`
+
+#### App Store Assets
+- iOS icon: 1024×1024px → aspect ratio `1:1`
+- iOS screenshots: device-specific (e.g. iPhone 15 Pro: 1290×2796px) → aspect ratio `9:16`
+- Google Play icon: 512×512px → aspect ratio `1:1`
+- Google Play feature graphic: 1024×500px → aspect ratio `16:9`
+- Google Play screenshots: 16:9 recommended → aspect ratio `16:9` or `9:16`
+- Show the app in action with clean, contextual screenshots
+- Highlight key features with minimal overlay text
+
+#### UI/UX Mockups
+- Clear structural layout before visual details
+- Mobile-first design approach
+- Color and contrast critical for hierarchy and accessibility
+- Realistic content, not lorem ipsum
+- Specify navigation, sidebar, content areas, data viz explicitly
+- Follow established UI conventions and design patterns
+- Default aspect ratio: `16:9` for desktop, `9:16` for mobile, `1:1` for icons
+
+#### Email Marketing
+- Email width: 600-640px desktop, 320px mobile
+- Header: 650-700px × 90-200px → aspect ratio `16:9`
+- Banner: 600×300px or 600×400px at 72 DPI → aspect ratio `16:9`
+- Simple, clutter-free: logo, clear offer, CTA
+- Keep under 1MB for mobile (50%+ open on mobile)
+- Web-safe fonts: Arial, Helvetica, Verdana, Georgia
+
+#### Presentations & Pitch Decks
+- Large, bold typography for key messages
+- Generous white space — avoid clutter
+- Data viz bold and instantly readable (no squinting)
+- Gradient color schemes for depth and sophistication
+- Custom icons over generic clipart
+- Asymmetrical layouts convey innovation
+- One strong sans-serif typeface with clear hierarchy
+- Default aspect ratio: `16:9`
+
+#### Product & E-commerce
+- White background product shots as default hero images
+- Lifestyle shots showing product in use context
+- Detail/close-up shots for textures and features
+- Category banners, promotional banners, sale graphics
+- 90% of buyers say photo quality is "extremely important"
+- Default aspect ratio: `1:1` for product shots, `16:9` for banners
+
+#### Blog & Content Marketing
+- Blog header images, featured images, inline graphics
+- Video thumbnails (1280×720px) → aspect ratio `16:9`
+- Infographics (get 178% more inbound links, 3x more shares)
+- Data visualization, process flows, timelines, comparisons
+- Default aspect ratio: `16:9` for headers, `9:16` for infographics
+
+#### Brand Assets
+- Logo concepts with proper spacing rules
+- Consistent color palette (1 dominant + 2 accents, hex codes)
+- Typography hierarchy
+- Icon systems with consistent style
+- Imagery conveying brand values and aesthetic
+- Style tiles and mood boards
+- Default aspect ratio: `1:1` for logos/icons, `16:9` for mood boards
+
+#### Sales Collateral
+- Brochures (bi-fold, tri-fold), fact sheets, product catalogs
+- Case study graphics, testimonial cards
+- One-pagers and executive summaries
+- Proposal cover pages
+- White paper covers and section headers
+- Default aspect ratio: `3:4` for one-pagers/covers, `16:9` for headers
+
+#### Packaging & Labels
+- CMYK color mode for print
+- 300 DPI minimum at actual size
+- Include bleed (3mm beyond edges)
+- Safe zone for critical elements
+- Box dielines, label artwork
+- Default aspect ratio: varies by package type
+
+#### General Best Practices (applied to ALL types)
+- Single clear focal point in every image
+- Strategic color: 1 dominant + 2 accent colors max
+- White space = professionalism
+- Authentic visuals > overly polished stock
+- Text contrast for readability (WCAG-friendly)
+- Match aspect ratio to intended platform/use
+- Avoid clutter — if you don't know where to look first, it's too busy
+- Max 2 fonts, 3 type styles
+- No watermarks, no placeholder text
+
+### Step 3: Analyze the Codebase for Context (if applicable)
+
+If the user is working in a software project, quickly scan for design context:
 
 - Use Glob to check for `tailwind.config.*`, `theme.*`, `*.css` files to identify color schemes
 - Check `package.json` for UI framework (React, Vue, etc.)
 - Look at existing pages/components to understand the app's visual language
 - Check for existing assets in `public/`, `assets/`, `static/` directories
 
-Use this context to make prompts more specific (e.g., "using a blue and white color scheme consistent with a Next.js SaaS dashboard").
+Use this context to make prompts more specific.
 
-### Step 3: Construct Prompts and Generate 3 Options
+### Step 4: Construct Expert Prompt & Generate
 
-Build 3 prompt variations that interpret the user's request from different angles. Each prompt should:
-- Start with the visual style and medium (e.g., "A clean, modern UI mockup of...")
-- Include specific details about layout, colors, and content
-- End with quality modifiers (e.g., "professional design, high quality, sharp details")
+Build a single expert prompt applying all relevant guidance from Step 2. Tell the user briefly what you're generating and why you chose the dimensions/style.
 
-Vary the 3 options by changing:
-- **Option 1**: Faithful, straightforward interpretation of the request
-- **Option 2**: A creative or alternative layout/composition
-- **Option 3**: A different visual style or emphasis
-
-Run all 3 generations in parallel. Here is the EXACT pattern to follow:
+Determine the next filename by checking existing files in the output directory:
 
 ```bash
 SCRIPT="${CLAUDE_PLUGIN_ROOT}/scripts/generate-image.mjs"
-OUTDIR="$PWD/mocks"
+OUTDIR="$PWD/sketches"
 mkdir -p "$OUTDIR"
 
-node "$SCRIPT" --prompt "PROMPT_1" --output "$OUTDIR/mock-option-1.png" --aspect-ratio "RATIO" &
-PID1=$!
-node "$SCRIPT" --prompt "PROMPT_2" --output "$OUTDIR/mock-option-2.png" --aspect-ratio "RATIO" &
-PID2=$!
-node "$SCRIPT" --prompt "PROMPT_3" --output "$OUTDIR/mock-option-3.png" --aspect-ratio "RATIO" &
-PID3=$!
+# Find next available number
+NEXT=1
+while [ -f "$OUTDIR/sketch-$NEXT.png" ]; do
+  NEXT=$((NEXT + 1))
+done
 
-wait $PID1 $PID2 $PID3
+node "$SCRIPT" --prompt "YOUR_EXPERT_PROMPT" --output "$OUTDIR/sketch-$NEXT.png" --aspect-ratio "RATIO"
 ```
 
-The script outputs JSON to stdout. Check each result for `"success": true`.
+The script outputs JSON to stdout. Check the result for `"success": true`.
 
-If any generation fails, report the error and retry that specific option once.
+If generation fails, report the error and retry once.
 
-### Step 4: Open Images and Present Options
+### Step 5: Open Image and Present
 
 After generation, you MUST do these things in order:
 
-**Step 4a: Print the paths and open the images.** Run this as a SEPARATE Bash call:
+**Step 5a: Print the path and open the image.** Run this as a SEPARATE Bash call:
 
 ```bash
-echo "Generated mockups:"
-echo "  Option 1: $PWD/mocks/mock-option-1.png"
-echo "  Option 2: $PWD/mocks/mock-option-2.png"
-echo "  Option 3: $PWD/mocks/mock-option-3.png"
+echo "Generated: $PWD/sketches/sketch-N.png"
 
 if command -v xdg-open &>/dev/null; then
-  xdg-open "$PWD/mocks/mock-option-1.png" &
-  xdg-open "$PWD/mocks/mock-option-2.png" &
-  xdg-open "$PWD/mocks/mock-option-3.png" &
+  xdg-open "$PWD/sketches/sketch-N.png" &
 elif command -v open &>/dev/null; then
-  open "$PWD/mocks/mock-option-1.png" "$PWD/mocks/mock-option-2.png" "$PWD/mocks/mock-option-3.png"
+  open "$PWD/sketches/sketch-N.png"
 elif command -v start &>/dev/null; then
-  start "" "$PWD/mocks/mock-option-1.png"
-  start "" "$PWD/mocks/mock-option-2.png"
-  start "" "$PWD/mocks/mock-option-3.png"
+  start "" "$PWD/sketches/sketch-N.png"
 fi
 ```
 
-**Step 4b: Read each image** with the Read tool so you (Claude) can see them and describe them.
+**Step 5b: Read the image** with the Read tool so you (Claude) can see it and describe it.
 
-**Step 4c: Describe each option** - the layout, colors, key elements, overall feel, and how it differs from the others.
+**Step 5c: Describe what was generated** — the layout, colors, key elements, overall feel, and how it matches the request.
 
-**Step 4d: Ask the user** what they'd like to do. Do NOT assume any selection. Wait for an explicit answer.
+### Step 6: Iterate
 
-### Step 5: Handle User Response
+Ask the user what they'd like to do next:
 
-Use AskUserQuestion to present choices, or respond to free-form feedback:
+**"Tweak"** — The user likes it but wants changes:
+- Use the generated image as a `--reference` input
+- Modify the prompt based on their feedback
+- Generate 1 new image with the next incremented filename
 
-**"Pick"** - The user wants to keep one of the options:
-- Ask where they want to save it (suggest a sensible default like `./mocks/mockup.png` or based on their project structure)
-- Copy the chosen file to the final location
-- Clean up the other options if the user wants
+**"Regenerate"** — The user wants a fresh take:
+- Adjust the prompt based on their feedback
+- Generate 1 new image (without reference unless specified)
 
-**"Tweak"** - The user likes an option but wants changes:
-- Use the chosen image as a `--reference` input
-- Modify the prompt based on their feedback (e.g., "make the header blue", "add a sidebar")
-- Generate 3 new variants using the reference image
-- Open them with xdg-open/open again
-- Present the new options and repeat
-
-**"Regenerate"** - The user wants fresh options:
-- Ask for any additional guidance or clarification
-- Adjust the prompts based on their feedback
-- Generate 3 new options (without reference images unless specified)
-- Open them with xdg-open/open again
-- Present and repeat
-
-**"Start over"** - The user wants to describe something completely different:
+**"Start over"** — The user wants something completely different:
 - Get the new description
 - Go back to Step 1
 
-### Step 6: Cleanup
-
-After the user is satisfied and has their final image(s):
-- Offer to clean up intermediate files in `./mocks/mock-option-*.png`
-- Summarize what was generated and where it was saved
+**"Done"** — The user is satisfied:
+- Summarize what was generated and where files are saved
 
 ## Important Notes
 
 - NEVER `cd` into the plugin cache directory. Always use absolute paths.
-- Always generate images into `$PWD/mocks/` (the user's working directory). Create it if it doesn't exist.
+- Always generate images into `$PWD/sketches/` (the user's working directory). Create it if it doesn't exist.
 - When constructing prompts, reference the `prompt-guide.md` in this skill's references directory for best practices.
-- If generating UI mockups, be very specific about layout: mention header, sidebar, main content area, grid structure, card layouts, etc.
 - For text in images: Gemini can render text but it's not always perfect. Warn the user that text in generated images may need manual correction.
-- Keep the loop going until the user explicitly says they're done or picks a final image.
+- Keep the loop going until the user explicitly says they're done.
 - If the user provides reference images, always pass them via the `--reference` flag to maintain visual consistency.
